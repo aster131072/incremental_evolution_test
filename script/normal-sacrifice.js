@@ -1,5 +1,5 @@
 function sacrifice(){
-	if(game.normal.inchallenge[8]==0&&game.infinity.inchallenge[2]==0){
+	if(game.normal.inchallenge[8]==0&&game.infinity.inchallenge[2]==0&&game.annihilation.inchallenge[2]==0){
 		if(ExpantaNum(get_sacrifice).gt(game.normal.sacrifice)&&(game.normal.generators.amount[7]!=0||game.normal.inchallenge[2]==1)){
 			let sacrifice_confirmation = true;
 			if(game.confirmconfig.sacrifice){

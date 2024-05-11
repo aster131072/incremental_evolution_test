@@ -46,6 +46,7 @@ let get_tsuu2_effect = 1;
 let get_tsuu3_effect = 1;
 let get_ep3_cap=1;
 let get_ac1_reward1=1;
+let get_ac1_factor=1;
 
 function tick()
 {
@@ -187,6 +188,7 @@ function tick()
 	}else{
 		get_ordinal_effect=ExpantaNum(game.infinity.ordinal.power).add(1).log10().pow(get_ordinal_essence_effect).add(1);
 	}
+	if(game.annihilation.inchallenge[5]==1) get_ordinal_effect=1;
 	get_ordinal_number = (game.infinity.ordinal.upgrade.plus*game.infinity.ordinal.upgrade.multi)**game.infinity.ordinal.upgrade.power;
 	if(game.eternity.milestones[0]==1) get_ordinal_number*=5;
 	if(get_ordinal_number==Infinity) get_ordinal_number = 1.797e308;
@@ -565,7 +567,20 @@ function tick()
 			game.eternity.generators.factor[i]=ExpantaNum(game.eternity.generators.factor[i]).pow(get_ec7_factor);
 		}
 	}
-
+	get_ac1_factor = 1-game.annihilation.challenged[0]/255;
+	if(game.annihilation.inchallenge[0]==1){
+		for(let i=0;i<8;i++){
+			game.normal.generators.factor[i]=ExpantaNum(game.normal.generators.factor[i]).pow(get_ac1_factor);
+			game.infinity.generators.factor[i]=ExpantaNum(game.infinity.generators.factor[i]).pow(get_ac1_factor);
+			game.eternity.generators.factor[i]=ExpantaNum(game.eternity.generators.factor[i]).pow(get_ac1_factor);
+		}
+	}
+	if(game.annihilation.inchallenge[1]==1){
+		game.normal.generators.factor[7]=0;
+		game.infinity.generators.factor[7]=0;
+		game.eternity.generators.factor[7]=0;
+	}
+	
 	//软上限
 	//let sacrifice_softcapped=false;
 	if(ExpantaNum(get_sacrifice).gt(1e100)) {
@@ -680,8 +695,7 @@ function tick()
 	if(game.eternity.timespace.upgrades[8]==1&&ExpantaNum(game.eternity.timespace.timespace).gte(10)){
 		get_tstsu3_effect=ExpantaNum.log10(game.eternity.timespace.timespace).pow(10);
 	}
-
-	if(game.eternity.upgrades[6]==1) {
+	if(game.eternity.upgrades[6]==1&&game.annihilation.inchallenge[3]==0) {
 		game.eternity.timespace.time=ExpantaNum(game.eternity.timespace.time).add(ExpantaNum.pow(3,game.eternity.timespace.buyables[0]).times(get_tstu2_effect).times(get_tstu3_effect).times(get_tstsu1_effect).times(gameSpeed).times(game.delay).times(0.001));
 	} 
 	if(game.eternity.upgrades[7]==1) {
@@ -836,6 +850,8 @@ function tick()
 	document.getElementById("ts_timespace").innerHTML=ExpantaNum(game.eternity.timespace.timespace).toPrecision(game.precision).replace("e+", "e");
 	document.getElementById("ts_uni").innerHTML=ExpantaNum(game.eternity.timespace.universe).toPrecision(game.precision).replace("e+", "e");
 	
+	document.getElementById("ac1_factor").innerHTML=ExpantaNum(get_ac1_factor).toPrecision(game.precision).replace("e+", "e");
+	
 	if(ExpantaNum(game.normal.number).gte(ExpantaNum(game.infinity.requirement))){
 		document.getElementById("infinityY").style.display='block';
 		document.getElementById("infinityN").style.display='none';
@@ -912,16 +928,16 @@ function tick()
 	
 	for(let i=1;i<=8;i++){
 		if(document.getElementById("normalgenerator"+i)) document.getElementById("normalgenerator"+i).innerHTML=ExpantaNum.floor(game.normal.generators.amount[i-1]).toPrecision(game.precision).replace("e+", "e");
-		if(document.getElementById("normalgeneratormultiplyer"+i)) document.getElementById("normalgeneratormultiplyer"+i).innerHTML=ExpantaNum.floor(game.normal.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
+		if(document.getElementById("normalgeneratormultiplyer"+i)) document.getElementById("normalgeneratormultiplyer"+i).innerHTML=ExpantaNum(game.normal.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
 		if(document.getElementById("buyNG"+i)) document.getElementById("buyNG"+i).value="Cost:"+ExpantaNum(game.normal.generators.actuallprice[i-1]).toPrecision(game.precision).replace("e+", "e");
 		if(game.infinity.hasinfinitied){
 			if(document.getElementById("infinitygenerator"+i)) document.getElementById("infinitygenerator"+i).innerHTML=ExpantaNum.floor(game.infinity.generators.amount[i-1]).toPrecision(game.precision).replace("e+", "e");
-			if(document.getElementById("infinitygeneratormultiplyer"+i)) document.getElementById("infinitygeneratormultiplyer"+i).innerHTML=ExpantaNum.floor(game.infinity.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
+			if(document.getElementById("infinitygeneratormultiplyer"+i)) document.getElementById("infinitygeneratormultiplyer"+i).innerHTML=ExpantaNum(game.infinity.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
 			if(document.getElementById("buyIG"+i)) document.getElementById("buyIG"+i).value="Cost:"+ExpantaNum(game.infinity.generators.actuallprice[i-1]).toPrecision(game.precision).replace("e+", "e");
 		}
 		if(game.eternity.haseternitied){
 			if(document.getElementById("eternitygenerator"+i)) document.getElementById("eternitygenerator"+i).innerHTML=ExpantaNum.floor(game.eternity.generators.amount[i-1]).toPrecision(game.precision).replace("e+", "e");
-			if(document.getElementById("eternitygeneratormultiplyer"+i)) document.getElementById("eternitygeneratormultiplyer"+i).innerHTML=ExpantaNum.floor(game.eternity.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
+			if(document.getElementById("eternitygeneratormultiplyer"+i)) document.getElementById("eternitygeneratormultiplyer"+i).innerHTML=ExpantaNum(game.eternity.generators.factor[i-1]).toPrecision(game.precision).replace("e+", "e");
 			if(document.getElementById("buyEG"+i)) document.getElementById("buyEG"+i).value="Cost:"+ExpantaNum(game.eternity.generators.actuallprice[i-1]).toPrecision(game.precision).replace("e+", "e");
 		}
 	}

@@ -1,4 +1,5 @@
 function buyeternityproducer(i){
+	if(game.annihilation.inchallenge[4]==1) return;
 	if(i<=3){
 		if(ExpantaNum(game.eternity.number).gte(game.eternity.producers.actuallprice[i-1])){
 			game.eternity.number=ExpantaNum(game.eternity.number).minus(ExpantaNum(game.eternity.producers.actuallprice[i-1]));
@@ -17,6 +18,7 @@ function buyeternityproducer(i){
 }
 
 function buymaxeternityproducer(i){
+	if(game.annihilation.inchallenge[4]==1) return;
 	if(i<=3){
 		if(ExpantaNum(game.eternity.number).gte(game.eternity.producers.actuallprice[i-1])){
 			let buyamount=ExpantaNum(game.eternity.number).add(1).div(game.eternity.producers.actuallprice[i-1]).log10().div(ExpantaNum(game.eternity.producers.scale[i-1]).log10()).ceil();
@@ -37,6 +39,7 @@ function buymaxeternityproducer(i){
 }
 
 function maxAlleternityproducer(){
+	if(game.annihilation.inchallenge[4]==1) return;
 	for(i=1;i<=3;i++){
 		buymaxeternityproducer(i);
 	}
